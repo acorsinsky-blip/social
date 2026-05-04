@@ -1,26 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Perfil</title>
+    <meta charset="UTF-8">
+    <title>SocialBiz - Mi Perfil</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">SocialApp</div>
+
+    <!-- Barra de Navegación (Solo visible si hay sesión) -->
+    <nav class="navbar" id="main-nav" style="display: none;">
+        <div class="logo">SocialBiz</div>
         <ul class="nav-links">
-            <li><a href="perfil.html">Perfil</a></li>
-            <li><a href="controlstock.html">Stock</a></li>
-            <li><a href="estadisticas.html">Estadísticas</a></li>
-            <li><a href="config.html">Config</a></li>
+            <li><a href="perfil.html" class="active">Perfil</a></li>
+            <li><a href="controlstock.html">Inventario</a></li>
+            <li><a href="estadisticas.html">Reportes</a></li>
+            <li><a href="config.html">⚙️</a></li>
+            <li><a href="#" onclick="logout()" style="color: #ff4d4d;">Salir</a></li>
         </ul>
     </nav>
-    <div class="container">
-        <h1>Mi Perfil</h1>
-        <div class="profile-header">
-            <img src="https://via.placeholder.com/100" style="border-radius: 50%;">
-            <h2>Usuario Admin</h2>
-            <p>Bienvenido a tu panel de control social.</p>
+
+    <!-- PANTALLA DE ACCESO (Login y Registro) -->
+    <div id="auth-container" class="container auth-card">
+        <div id="login-form">
+            <h2>Iniciar Sesión</h2>
+            <input type="text" id="login-user" placeholder="Usuario">
+            <input type="password" id="login-pass" placeholder="Contraseña">
+            <button class="btn" onclick="login()">Entrar</button>
+            <p>¿No tienes cuenta? <a href="#" onclick="toggleAuth()">Regístrate</a></p>
+        </div>
+
+        <div id="register-form" style="display: none;">
+            <h2>Crear Cuenta</h2>
+            <input type="text" id="reg-user" placeholder="Crea un usuario">
+            <input type="email" id="reg-email" placeholder="Correo electrónico">
+            <input type="password" id="reg-pass" placeholder="Contraseña">
+            <button class="btn btn-success" onclick="register()">Registrarme</button>
+            <p>¿Ya tienes cuenta? <a href="#" onclick="toggleAuth()">Inicia sesión</a></p>
         </div>
     </div>
+
+    <!-- PANTALLA DE PERFIL (Oculta por defecto) -->
+    <div id="perfil-content" class="container perfil-wrapper" style="display: none;">
+        <div class="header-perfil">
+            <div class="portada"></div>
+            <div class="foto-perfil">
+                <img src="https://randomuser.me/api/portraits/lego/1.jpg" alt="Perfil">
+            </div>
+        </div>
+        <div class="info-usuario">
+            <h1 id="display-name">Nombre de Usuario</h1>
+            <p class="username" id="display-username">@usuario</p>
+            <p class="bio">Bienvenido a tu panel de control social. Gestiona tus productos y revisa tus estadísticas.</p>
+            <div class="stats-sociales">
+                <span><strong>0</strong> Seguidores</span>
+                <span><strong>0</strong> Siguiendo</span>
+                <span><strong>0</strong> Stock</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
 </body>
 </html>
