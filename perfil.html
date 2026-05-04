@@ -4,10 +4,18 @@
     <meta charset="UTF-8">
     <title>SocialBiz - Mi Perfil</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos rápidos para asegurar visualización */
+        .auth-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; }
+        .auth-box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 350px; text-align: center; }
+        .auth-box input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; background: #007bff; color: white; }
+        .btn-success { background: #28a745; }
+    </style>
 </head>
 <body>
 
-    <!-- Barra de Navegación (Solo visible si hay sesión) -->
+    <!-- Barra de Navegación -->
     <nav class="navbar" id="main-nav" style="display: none;">
         <div class="logo">SocialBiz</div>
         <ul class="nav-links">
@@ -15,50 +23,131 @@
             <li><a href="controlstock.html">Inventario</a></li>
             <li><a href="estadisticas.html">Reportes</a></li>
             <li><a href="config.html">⚙️</a></li>
-            <li><a href="#" onclick="logout()" style="color: #ff4d4d;">Salir</a></li>
+            <li><button onclick="logout()" style="background:none; border:none; color:red; cursor:pointer; margin-left:15px;">Salir</button></li>
         </ul>
     </nav>
 
-    <!-- PANTALLA DE ACCESO (Login y Registro) -->
-    <div id="auth-container" class="container auth-card">
-        <div id="login-form">
-            <h2>Iniciar Sesión</h2>
-            <input type="text" id="login-user" placeholder="Usuario">
-            <input type="password" id="login-pass" placeholder="Contraseña">
-            <button class="btn" onclick="login()">Entrar</button>
-            <p>¿No tienes cuenta? <a href="#" onclick="toggleAuth()">Regístrate</a></p>
-        </div>
-
-        <div id="register-form" style="display: none;">
-            <h2>Crear Cuenta</h2>
-            <input type="text" id="reg-user" placeholder="Crea un usuario">
-            <input type="email" id="reg-email" placeholder="Correo electrónico">
-            <input type="password" id="reg-pass" placeholder="Contraseña">
-            <button class="btn btn-success" onclick="register()">Registrarme</button>
-            <p>¿Ya tienes cuenta? <a href="#" onclick="toggleAuth()">Inicia sesión</a></p>
-        </div>
-    </div>
-
-    <!-- PANTALLA DE PERFIL (Oculta por defecto) -->
-    <div id="perfil-content" class="container perfil-wrapper" style="display: none;">
-        <div class="header-perfil">
-            <div class="portada"></div>
-            <div class="foto-perfil">
-                <img src="https://randomuser.me/api/portraits/lego/1.jpg" alt="Perfil">
+    <!-- SECCIÓN DE ACCESO -->
+    <div id="auth-screen" class="container auth-container">
+        <div class="auth-box">
+            <!-- Login -->
+            <div id="login-form">
+                <h2>Iniciar Sesión</h2>
+                <form onsubmit="login(event)">
+                    <input type="text" id="l-user" placeholder="Usuario" required>
+                    <input type="password" id="l-pass" placeholder="Contraseña" required>
+                    <button type="submit" class="btn">Entrar</button>
+                </form>
+                <p>¿No tienes cuenta? <a href="javascript:void(0)" onclick="toggleAuth()">Regístrate</a></p>
             </div>
-        </div>
-        <div class="info-usuario">
-            <h1 id="display-name">Nombre de Usuario</h1>
-            <p class="username" id="display-username">@usuario</p>
-            <p class="bio">Bienvenido a tu panel de control social. Gestiona tus productos y revisa tus estadísticas.</p>
-            <div class="stats-sociales">
-                <span><strong>0</strong> Seguidores</span>
-                <span><strong>0</strong> Siguiendo</span>
-                <span><strong>0</strong> Stock</span>
+
+            <!-- Registro -->
+            <div id="register-form" style="display: none;">
+                <h2>Crear Cuenta</h2>
+                <form onsubmit="register(event)">
+                    <input type="text" id="r-user" placeholder="Nombre de usuario" required>
+                    <input type="email" id="r-email" placeholder="Correo electrónico" required>
+                    <input type="password" id="r-pass" placeholder="Contraseña" required>
+                    <button type="submit" class="btn btn-success">Registrarme Ahora</button>
+                </form>
+                <p>¿Ya tienes cuenta? <a href="javascript:void(0)" onclick="toggleAuth()">Inicia sesión</a></p>
             </div>
         </div>
     </div>
 
-    <script src="auth.js"></script>
+    <!-- SECCIÓN DE PERFIL -->
+    <div id="profile-screen" class="container" style="display: none; padding: 20px;">
+        <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <div style="height: 100px; background: linear-gradient(90deg, #007bff, #00c6ff);"></div>
+            <div style="padding: 20px; text-align: center;">
+                <h1 id="p-name" style="margin: 0;">Nombre</h1>
+                <p id="p-username" style="color: #666;">@usuario</p>
+                <hr>
+                <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                    <div><strong>150</strong><br>Seguidores</div>
+                    <div><strong>89</strong><br>Siguiendo</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cambiar entre Login y Registro
+        function toggleAuth() {
+            const login = document.getElementById('login-form');
+            const register = document.getElementById('register-form');
+            if (login.style.display === "none") {
+                login.style.display = "block";
+                register.style.display = "none";
+            } else {
+                login.style.display = "none";
+                register.style.display = "block";
+            }
+        }
+
+        // Función Registrar
+        function register(e) {
+            e.preventDefault(); // EVITA QUE LA PÁGINA SE RECARGUE
+            
+            const user = document.getElementById('r-user').value;
+            const email = document.getElementById('r-email').value;
+            const pass = document.getElementById('r-pass').value;
+
+            const userData = { username: user, password: pass, email: email };
+            
+            // Guardar en el navegador
+            localStorage.setItem('socialBizUser', JSON.stringify(userData));
+            
+            alert("¡Usuario " + user + " registrado con éxito!");
+            toggleAuth(); // Volver al login
+        }
+
+        // Función Login
+        function login(e) {
+            e.preventDefault();
+            
+            const userIn = document.getElementById('l-user').value;
+            const passIn = document.getElementById('l-pass').value;
+            
+            const stored = JSON.parse(localStorage.getItem('socialBizUser'));
+
+            if (stored && userIn === stored.username && passIn === stored.password) {
+                localStorage.setItem('sessionActive', 'true');
+                init(); // Actualizar vista
+            } else {
+                alert("Usuario o contraseña incorrectos.");
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('sessionActive');
+            location.reload();
+        }
+
+        // Controlar qué se ve al cargar
+        function init() {
+            const session = localStorage.getItem('sessionActive');
+            const user = JSON.parse(localStorage.getItem('socialBizUser'));
+            
+            const authScreen = document.getElementById('auth-screen');
+            const profileScreen = document.getElementById('profile-screen');
+            const nav = document.getElementById('main-nav');
+
+            if (session === 'true' && user) {
+                authScreen.style.display = 'none';
+                profileScreen.style.display = 'block';
+                nav.style.display = 'flex';
+                document.getElementById('p-name').innerText = user.username;
+                document.getElementById('p-username').innerText = "@" + user.username.toLowerCase();
+            } else {
+                authScreen.style.display = 'flex';
+                profileScreen.style.display = 'none';
+                nav.style.display = 'none';
+            }
+        }
+
+        // Ejecutar al cargar la página
+        window.onload = init;
+    </script>
 </body>
 </html>
