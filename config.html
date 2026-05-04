@@ -1,24 +1,111 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Configuración</title>
+    <meta charset="UTF-8">
+    <title>Configuración - SocialBiz</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">SocialApp</div>
+    <!-- Navbar común -->
+    <nav class="navbar" id="main-nav">
+        <div class="logo">SocialBiz</div>
         <ul class="nav-links">
             <li><a href="perfil.html">Perfil</a></li>
-            <li><a href="controlstock.html">Stock</a></li>
-            <li><a href="estadisticas.html">Estadísticas</a></li>
-            <li><a href="config.html">Config</a></li>
+            <li><a href="controlstock.html">Inventario</a></li>
+            <li><a href="estadisticas.html">Reportes</a></li>
+            <li><a href="config.html" class="active">⚙️</a></li>
         </ul>
     </nav>
-    <div class="container">
-        <h1>Configuración de Cuenta</h1>
-        <label>Cambiar nombre de usuario:</label><br>
-        <input type="text" placeholder="Nuevo nombre..."><br><br>
-        <button class="btn" style="background: var(--success);">Guardar Cambios</button>
+
+    <div class="container config-container">
+        <!-- Sidebar de Configuración -->
+        <aside class="config-sidebar">
+            <ul>
+                <li class="active" onclick="showTab('cuenta')">Editar Perfil</li>
+                <li onclick="showTab('seguridad')">Seguridad</li>
+                <li onclick="showTab('notificaciones')">Notificaciones</li>
+                <li onclick="showTab('privacidad')">Privacidad</li>
+                <li onclick="logout()" class="logout-item">Cerrar Sesión</li>
+            </ul>
+        </aside>
+
+        <!-- Contenido de Configuración -->
+        <main class="config-content">
+            <!-- Sección Editar Perfil -->
+            <section id="cuenta" class="tab-content">
+                <h2>Editar Perfil</h2>
+                <div class="config-field">
+                    <label>Nombre de usuario</label>
+                    <input type="text" id="conf-username" placeholder="Nuevo usuario">
+                </div>
+                <div class="config-field">
+                    <label>Biografía</label>
+                    <textarea id="conf-bio" rows="3" placeholder="Escribe algo sobre ti..."></textarea>
+                </div>
+                <div class="config-field">
+                    <label>Correo Electrónico</label>
+                    <input type="email" id="conf-email">
+                </div>
+                <button class="btn" onclick="saveProfile()">Guardar Cambios</button>
+            </section>
+
+            <!-- Sección Seguridad -->
+            <section id="seguridad" class="tab-content" style="display:none;">
+                <h2>Seguridad</h2>
+                <div class="config-field">
+                    <label>Nueva Contraseña</label>
+                    <input type="password" placeholder="Mínimo 8 caracteres">
+                </div>
+                <div class="config-field">
+                    <label>Confirmar Contraseña</label>
+                    <input type="password">
+                </div>
+                <button class="btn btn-warning">Cambiar Contraseña</button>
+            </section>
+
+            <!-- Sección Notificaciones -->
+            <section id="notificaciones" class="tab-content" style="display:none;">
+                <h2>Notificaciones</h2>
+                <div class="config-check">
+                    <input type="checkbox" checked> <label>Notificar nuevos pedidos en Stock</label>
+                </div>
+                <div class="config-check">
+                    <input type="checkbox"> <label>Alertas de seguridad por correo</label>
+                </div>
+                <div class="config-check">
+                    <input type="checkbox" checked> <label>Mensajes directos de seguidores</label>
+                </div>
+            </section>
+        </main>
     </div>
+
+    <script src="auth.js"></script>
+    <script>
+        // Función simple para cambiar entre pestañas de configuración
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+            document.querySelectorAll('.config-sidebar li').forEach(li => li.classList.remove('active'));
+            
+            document.getElementById(tabId).style.display = 'block';
+            event.currentTarget.classList.add('active');
+        }
+
+        // Cargar datos actuales al iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            const data = JSON.parse(localStorage.getItem('userStored'));
+            if(data) {
+                document.getElementById('conf-username').value = data.username;
+                document.getElementById('conf-email').value = data.email || "";
+            }
+        });
+
+        function saveProfile() {
+            const newName = document.getElementById('conf-username').value;
+            const data = JSON.parse(localStorage.getItem('userStored'));
+            data.username = newName;
+            localStorage.setItem('userStored', JSON.stringify(data));
+            alert("Perfil actualizado correctamente");
+        }
+    </script>
 </body>
 </html>
