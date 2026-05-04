@@ -3,34 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>SocialBiz - Mi Perfil</title>
-    <link rel="stylesheet" href="style.css">
     <style>
-        /* Estilos rápidos para asegurar visualización */
+        body { font-family: sans-serif; background: #f4f7f6; margin: 0; }
+        .navbar { display: none; background: white; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); justify-content: space-between; align-items: center; }
+        .nav-links { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
         .auth-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; }
         .auth-box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 350px; text-align: center; }
         .auth-box input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
         .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; background: #007bff; color: white; }
         .btn-success { background: #28a745; }
+        .profile-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 500px; margin: 50px auto; }
     </style>
 </head>
 <body>
 
-    <!-- Barra de Navegación -->
-    <nav class="navbar" id="main-nav" style="display: none;">
-        <div class="logo">SocialBiz</div>
+    <nav class="navbar" id="main-nav">
+        <div class="logo"><strong>SocialBiz</strong></div>
         <ul class="nav-links">
-            <li><a href="perfil.html" class="active">Perfil</a></li>
-            <li><a href="controlstock.html">Inventario</a></li>
-            <li><a href="estadisticas.html">Reportes</a></li>
-            <li><a href="config.html">⚙️</a></li>
-            <li><button onclick="logout()" style="background:none; border:none; color:red; cursor:pointer; margin-left:15px;">Salir</button></li>
+            <li><a href="#" class="active">Perfil</a></li>
+            <li><a href="#">Inventario</a></li>
+            <li><a href="#">Reportes</a></li>
+            <li><button onclick="logout()" style="background:none; border:none; color:red; cursor:pointer;">Salir</button></li>
         </ul>
     </nav>
 
-    <!-- SECCIÓN DE ACCESO -->
-    <div id="auth-screen" class="container auth-container">
+    <div id="auth-screen" class="auth-container">
         <div class="auth-box">
-            <!-- Login -->
             <div id="login-form">
                 <h2>Iniciar Sesión</h2>
                 <form onsubmit="login(event)">
@@ -41,7 +39,6 @@
                 <p>¿No tienes cuenta? <a href="javascript:void(0)" onclick="toggleAuth()">Regístrate</a></p>
             </div>
 
-            <!-- Registro -->
             <div id="register-form" style="display: none;">
                 <h2>Crear Cuenta</h2>
                 <form onsubmit="register(event)">
@@ -55,13 +52,14 @@
         </div>
     </div>
 
-    <!-- SECCIÓN DE PERFIL -->
-    <div id="profile-screen" class="container" style="display: none; padding: 20px;">
-        <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <div id="profile-screen" style="display: none;">
+        <div class="profile-card">
             <div style="height: 100px; background: linear-gradient(90deg, #007bff, #00c6ff);"></div>
             <div style="padding: 20px; text-align: center;">
+                <div style="width: 100px; height: 100px; background: #ddd; border-radius: 50%; margin: -70px auto 10px auto; border: 4px solid white; display: flex; align-items: center; justify-content: center; font-size: 40px;">👤</div>
                 <h1 id="p-name" style="margin: 0;">Nombre</h1>
                 <p id="p-username" style="color: #666;">@usuario</p>
+                <p id="p-bio" style="color: #444; font-style: italic; margin: 15px 0;">¡Bienvenido a tu perfil en SocialBiz!</p>
                 <hr>
                 <div style="display: flex; justify-content: space-around; margin-top: 20px;">
                     <div><strong>150</strong><br>Seguidores</div>
@@ -72,48 +70,34 @@
     </div>
 
     <script>
-        // Cambiar entre Login y Registro
         function toggleAuth() {
             const login = document.getElementById('login-form');
             const register = document.getElementById('register-form');
-            if (login.style.display === "none") {
-                login.style.display = "block";
-                register.style.display = "none";
-            } else {
-                login.style.display = "none";
-                register.style.display = "block";
-            }
+            login.style.display = login.style.display === "none" ? "block" : "none";
+            register.style.display = register.style.display === "none" ? "block" : "none";
         }
 
-        // Función Registrar
         function register(e) {
-            e.preventDefault(); // EVITA QUE LA PÁGINA SE RECARGUE
-            
-            const user = document.getElementById('r-user').value;
-            const email = document.getElementById('r-email').value;
-            const pass = document.getElementById('r-pass').value;
-
-            const userData = { username: user, password: pass, email: email };
-            
-            // Guardar en el navegador
+            e.preventDefault();
+            const userData = { 
+                username: document.getElementById('r-user').value, 
+                password: document.getElementById('r-pass').value, 
+                email: document.getElementById('r-email').value 
+            };
             localStorage.setItem('socialBizUser', JSON.stringify(userData));
-            
-            alert("¡Usuario " + user + " registrado con éxito!");
-            toggleAuth(); // Volver al login
+            alert("¡Usuario registrado!");
+            toggleAuth();
         }
 
-        // Función Login
         function login(e) {
             e.preventDefault();
-            
             const userIn = document.getElementById('l-user').value;
             const passIn = document.getElementById('l-pass').value;
-            
             const stored = JSON.parse(localStorage.getItem('socialBizUser'));
 
             if (stored && userIn === stored.username && passIn === stored.password) {
                 localStorage.setItem('sessionActive', 'true');
-                init(); // Actualizar vista
+                init();
             } else {
                 alert("Usuario o contraseña incorrectos.");
             }
@@ -124,29 +108,18 @@
             location.reload();
         }
 
-        // Controlar qué se ve al cargar
         function init() {
             const session = localStorage.getItem('sessionActive');
             const user = JSON.parse(localStorage.getItem('socialBizUser'));
             
-            const authScreen = document.getElementById('auth-screen');
-            const profileScreen = document.getElementById('profile-screen');
-            const nav = document.getElementById('main-nav');
-
             if (session === 'true' && user) {
-                authScreen.style.display = 'none';
-                profileScreen.style.display = 'block';
-                nav.style.display = 'flex';
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('profile-screen').style.display = 'block';
+                document.getElementById('main-nav').style.display = 'flex';
                 document.getElementById('p-name').innerText = user.username;
                 document.getElementById('p-username').innerText = "@" + user.username.toLowerCase();
-            } else {
-                authScreen.style.display = 'flex';
-                profileScreen.style.display = 'none';
-                nav.style.display = 'none';
             }
         }
-
-        // Ejecutar al cargar la página
         window.onload = init;
     </script>
 </body>
