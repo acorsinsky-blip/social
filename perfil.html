@@ -3,84 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <title>SocialBiz - Mi Perfil</title>
-    <style>
-        body { font-family: sans-serif; background: #f4f7f6; margin: 0; }
-        .navbar { display: none; background: white; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); justify-content: space-between; align-items: center; }
-        .nav-links { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
-        
-        /* NUEVO: Estilo del Menú Lateral */
-        .side-menu {
-            position: fixed;
-            right: 20px;
-            top: 80px;
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            display: none; /* Se mostrará solo al loguearse */
-            flex-direction: column;
-            gap: 15px;
-        }
-        .side-menu a { text-decoration: none; color: #007bff; font-weight: bold; }
-
-        .auth-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; }
-        .auth-box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 350px; text-align: center; }
-        .auth-box input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; background: #007bff; color: white; }
-        .btn-success { background: #28a745; }
-        .profile-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 500px; margin: 50px auto; }
-    </style>
+    <link rel="stylesheet" href="index.css">
 </head>
-<body>
+<body style="background: #f4f7f6; margin: 0; font-family: sans-serif;">
 
-    <nav class="navbar" id="main-nav">
+    <!-- Barra de Navegación Unificada -->
+    <nav class="navbar" id="main-nav" style="display: none;">
         <div class="logo"><strong>SocialBiz</strong></div>
         <ul class="nav-links">
-            <li><button onclick="logout()" style="background:none; border:none; color:red; cursor:pointer;">Salir</button></li>
+            <li><a href="perfil.html" class="active">Perfil</a></li>
+            <li><a href="controlstock.html">Inventario</a></li>
+            <li><a href="estadisticas.html">Reportes</a></li>
+            <li><a href="config.html">Config</a></li>
+            <li><a href="calendariodeventos.html">Eventos</a></li>
+            <li><a href="formulariodereservas.html">Publicar</a></li>
+            <li><a href="historialdemovimientos.html">Historial</a></li>
+            <li><a href="catalogo.html">Explorar</a></li>
+            <li><button onclick="logout()" class="btn btn-outline" style="padding: 5px 10px; border-color: red; color: red;">Salir</button></li>
         </ul>
     </nav>
 
-    <div id="side-menu" class="side-menu">
-        <a href="perfil.html">👤 Perfil</a>
-        <a href="controlstock.html">📦 Inventario</a>
-        <a href="estadisticas.html">📊 Estadísticas</a>
-        <a href="config.html">⚙️ Configuración</a>
-    </div>
-
-    <div id="auth-screen" class="auth-container">
-        <div class="auth-box">
+    <!-- Pantalla de Login / Registro -->
+    <div id="auth-screen" class="container" style="max-width: 400px; text-align: center; margin-top: 80px;">
+        <div class="card">
+            
             <div id="login-form">
-                <h2>Iniciar Sesión</h2>
+                <h2 style="margin-bottom: 20px; color: #333;">Iniciar Sesión</h2>
                 <form onsubmit="login(event)">
-                    <input type="text" id="l-user" placeholder="Usuario" required>
-                    <input type="password" id="l-pass" placeholder="Contraseña" required>
-                    <button type="submit" class="btn">Entrar</button>
+                    <div class="form-group">
+                        <input type="text" id="l-user" class="form-control" placeholder="Usuario (@)" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="l-pass" class="form-control" placeholder="Contraseña" required>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%;">Entrar</button>
                 </form>
-                <p>¿No tienes cuenta? <a href="javascript:void(0)" onclick="toggleAuth()">Regístrate</a></p>
+                <p style="margin-top: 15px; color: #666; font-size: 0.9rem;">
+                    ¿No tienes cuenta? <a href="#" onclick="toggleAuth()" style="color: #007bff; text-decoration: none; font-weight: bold;">Regístrate</a>
+                </p>
             </div>
+            
             <div id="register-form" style="display: none;">
-                <h2>Crear Cuenta</h2>
+                <h2 style="margin-bottom: 20px; color: #333;">Crear Cuenta</h2>
                 <form onsubmit="register(event)">
-                    <input type="text" id="r-user" placeholder="Nombre de usuario" required>
-                    <input type="email" id="r-email" placeholder="Correo electrónico" required>
-                    <input type="password" id="r-pass" placeholder="Contraseña" required>
-                    <button type="submit" class="btn btn-success">Registrarme Ahora</button>
+                    <div class="form-group">
+                        <input type="text" id="r-user" class="form-control" placeholder="Nombre de usuario (@)" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="r-email" class="form-control" placeholder="Correo electrónico" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="r-pass" class="form-control" placeholder="Contraseña" required>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%; background-color: #28a745;">Registrarme Ahora</button>
                 </form>
+                <p style="margin-top: 15px; color: #666; font-size: 0.9rem;">
+                    ¿Ya tienes cuenta? <a href="#" onclick="toggleAuth()" style="color: #007bff; text-decoration: none; font-weight: bold;">Inicia Sesión</a>
+                </p>
             </div>
+
         </div>
     </div>
 
-    <div id="profile-screen" style="display: none;">
-        <div class="profile-card">
-            <div style="height: 100px; background: linear-gradient(90deg, #007bff, #00c6ff);"></div>
-            <div style="padding: 20px; text-align: center;">
-                <h1 id="p-name">Nombre</h1>
+    <!-- Pantalla del Perfil -->
+    <div id="profile-screen" class="container" style="display: none;">
+        <div class="card" style="padding: 0; overflow: hidden; max-width: 600px; margin: 0 auto;">
+            
+            <div style="height: 120px; background: linear-gradient(90deg, #007bff, #00c6ff);"></div>
+            
+            <div style="padding: 30px; text-align: center; position: relative;">
+                
+                <!-- NUEVO: Agregado el ID avatar-container y overflow hidden -->
+                <div id="avatar-container" style="width: 100px; height: 100px; background: white; border-radius: 50%; border: 4px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin: -80px auto 10px auto; display: flex; align-items: center; justify-content: center; font-size: 40px; overflow: hidden;">
+                    👤
+                </div>
+                
+                <h1 id="p-name" style="margin: 10px 0 0 0; color: #333;">Nombre</h1>
+                <p style="color: #007bff; font-weight: bold; margin-top: 5px; margin-bottom: 15px;">@<span id="p-username">usuario</span></p>
+                <p id="p-bio" style="color: #666; margin-bottom: 25px; line-height: 1.5; font-style: italic; max-width: 80%; margin-left: auto; margin-right: auto;"></p>
+                
+                <button onclick="window.location.href='config.html'" class="btn btn-outline" style="margin-bottom: 15px;">Editar Perfil</button>
             </div>
+
         </div>
     </div>
 
     <script>
-        // ... (tus funciones de toggleAuth, register, login, logout se mantienen) ...
+        function toggleAuth() {
+            const loginDiv = document.getElementById('login-form');
+            const registerDiv = document.getElementById('register-form');
+            if (loginDiv.style.display === "none") {
+                loginDiv.style.display = "block";
+                registerDiv.style.display = "none";
+            } else {
+                loginDiv.style.display = "none";
+                registerDiv.style.display = "block";
+            }
+        }
+
+        function register(e) {
+            e.preventDefault(); 
+            const user = document.getElementById('r-user').value;
+            const email = document.getElementById('r-email').value;
+            const pass = document.getElementById('r-pass').value;
+            
+            if (user === "" || pass === "") {
+                alert("Por favor, completa los campos obligatorios.");
+                return;
+            }
+            
+            const userData = {
+                username: user,
+                password: pass,
+                email: email,
+                displayName: user,
+                bio: "",
+                avatar: "" // Dejamos el espacio listo para la foto
+            };
+            
+            localStorage.setItem('socialBizUser', JSON.stringify(userData));
+            alert("¡Registro exitoso! Ahora puedes iniciar sesión.");
+            toggleAuth(); 
+        }
+
+        function login(e) {
+            e.preventDefault(); 
+            const userIn = document.getElementById('l-user').value;
+            const passIn = document.getElementById('l-pass').value;
+            const data = localStorage.getItem('socialBizUser');
+            
+            if (!data) {
+                alert("No hay usuarios registrados.");
+                return;
+            }
+            
+            const userObj = JSON.parse(data);
+            
+            if (userIn === userObj.username && passIn === userObj.password) {
+                localStorage.setItem('sessionActive', 'true');
+                window.location.reload(); 
+            } else {
+                alert("Usuario o contraseña incorrectos.");
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('sessionActive');
+            window.location.reload();
+        }
 
         function init() {
             const session = localStorage.getItem('sessionActive');
@@ -90,12 +160,24 @@
                 document.getElementById('auth-screen').style.display = 'none';
                 document.getElementById('profile-screen').style.display = 'block';
                 document.getElementById('main-nav').style.display = 'flex';
-                // Mostramos el menú lateral al iniciar sesión
-                document.getElementById('side-menu').style.display = 'flex'; 
                 
-                document.getElementById('p-name').innerText = user.username;
+                document.getElementById('p-name').innerText = user.displayName || user.username;
+                document.getElementById('p-username').innerText = user.username.toLowerCase().replace(/\s+/g, '');
+                document.getElementById('p-bio').innerText = user.bio || "Aún no tienes una biografía. ¡Haz clic en 'Editar Perfil' para agregar una!";
+                
+                // NUEVO: Mostrar la foto si existe
+                if (user.avatar && user.avatar !== "") {
+                    const avatarCont = document.getElementById('avatar-container');
+                    avatarCont.innerHTML = `<img src="${user.avatar}" style="width: 100%; height: 100%; object-fit: cover;">`;
+                }
+                
+            } else {
+                document.getElementById('auth-screen').style.display = 'flex';
+                document.getElementById('profile-screen').style.display = 'none';
+                document.getElementById('main-nav').style.display = 'none';
             }
         }
+        
         window.onload = init;
     </script>
 </body>

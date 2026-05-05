@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SocialBiz - Nueva Publicación</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"><strong>SocialBiz</strong></div>
+        <ul class="nav-links">
+            <li><a href="perfil.html">Perfil</a></li>
+            <li><a href="controlstock.html">Inventario</a></li>
+            <li><a href="estadisticas.html">Reportes</a></li>
+            <li><a href="config.html">Config</a></li>
+            <li><a href="calendariodeventos.html">Eventos</a></li>
+            <li><a href="formulariodereservas.html" class="active">Publicar</a></li>
+            <li><a href="historialdemovimientos.html">Historial</a></li>
+            <li><a href="catalogo.html">Explorar</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <h2>Crear Nueva Publicación</h2>
+            <p style="color: #666; margin-bottom: 20px;">Reserva un espacio en el feed de tus seguidores.</p>
+            
+            <form action="#">
+                <div class="form-group">
+                    <label for="titulo">Título de la publicación</label>
+                    <input type="text" id="titulo" class="form-control" placeholder="Ej: Nuevo proyecto terminado">
+                </div>
+
+                <div class="form-group">
+                    <label for="contenido">Contenido</label>
+                    <textarea id="contenido" class="form-control" rows="5" placeholder="¿Qué estás pensando?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="privacidad">Privacidad</label>
+                    <select id="privacidad" class="form-control">
+                        <option value="publico">Público (Todos)</option>
+                        <option value="amigos">Solo Amigos</option>
+                        <option value="privado">Solo yo</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn" style="width: 100%;">Publicar Ahora</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

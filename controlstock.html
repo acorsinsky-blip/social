@@ -1,37 +1,139 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Control de Stock</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>SocialBiz - Control de Stock</title>
+    <!-- Conectado al CSS Único -->
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">SocialApp</div>
+    <!-- Barra de Navegación Unificada -->
+    <nav class="navbar" id="main-nav">
+        <div class="logo"><strong>SocialBiz</strong></div>
         <ul class="nav-links">
             <li><a href="perfil.html">Perfil</a></li>
-            <li><a href="controlstock.html">Stock</a></li>
-            <li><a href="estadisticas.html">Estadísticas</a></li>
+            <li><a href="controlstock.html" class="active">Inventario</a></li>
+            <li><a href="estadisticas.html">Reportes</a></li>
             <li><a href="config.html">Config</a></li>
+            <li><a href="calendariodeventos.html">Eventos</a></li>
+            <li><a href="formulariodereservas.html">Publicar</a></li>
+            <li><a href="historialdemovimientos.html">Historial</a></li>
+            <li><a href="catalogo.html">Explorar</a></li>
         </ul>
     </nav>
+
     <div class="container">
-        <h1>Gestión de Inventario</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Producto A</td>
-                    <td>50</td>
-                    <td><button class="btn">Editar</button></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="card" style="max-width: 900px; margin: 0 auto;">
+            <h2>Gestión de Inventario (Contenidos)</h2>
+            <p style="color: #666; margin-bottom: 20px;">Administra las fotos, videos y archivos de tus publicaciones.</p>
+
+            <!-- Barra de herramientas superior -->
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <input type="text" class="form-control" placeholder="Buscar archivo o etiqueta..." style="flex-grow: 1;">
+                <select class="form-control" style="width: auto;">
+                    <option>Todos los formatos</option>
+                    <option>Imágenes</option>
+                    <option>Videos</option>
+                    <option>Código</option>
+                </select>
+                <button class="btn" onclick="subirArchivo()" style="background-color: #28a745;">+ Subir Nuevo</button>
+            </div>
+
+            <!-- Tabla de inventario interactiva -->
+            <table id="tabla-stock">
+                <thead>
+                    <tr>
+                        <th>Archivo</th>
+                        <th>Tipo</th>
+                        <th>Etiquetas</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="cuerpo-tabla">
+                    <!-- Fila 1 -->
+                    <tr>
+                        <td><strong>entrevista_monumental.mp4</strong><br><small style="color: #666;">245 MB</small></td>
+                        <td>Video</td>
+                        <td>#Deportes #River</td>
+                        <td style="color: green; font-weight: bold;">Publicado</td>
+                        <td>
+                            <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;" onclick="editarArchivo(this)">Editar</button>
+                            <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; background-color: #dc3545;" onclick="eliminarArchivo(this)">Eliminar</button>
+                        </td>
+                    </tr>
+                    
+                    <!-- Fila 2 -->
+                    <tr>
+                        <td><strong>logica_pingpong.java</strong><br><small style="color: #666;">12 KB</small></td>
+                        <td>Código</td>
+                        <td>#Programación #Java</td>
+                        <td style="color: orange; font-weight: bold;">Borrador</td>
+                        <td>
+                            <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;" onclick="editarArchivo(this)">Editar</button>
+                            <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; background-color: #dc3545;" onclick="eliminarArchivo(this)">Eliminar</button>
+                        </td>
+                    </tr>
+
+                    <!-- Fila 3 -->
+                    <tr>
+                        <td><strong>portfolio_vale_v1.png</strong><br><small style="color: #666;">2.4 MB</small></td>
+                        <td>Imagen</td>
+                        <td>#Diseño #Web</td>
+                        <td style="color: green; font-weight: bold;">Publicado</td>
+                        <td>
+                            <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;" onclick="editarArchivo(this)">Editar</button>
+                            <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; background-color: #dc3545;" onclick="eliminarArchivo(this)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+
+    <!-- Funciones JavaScript para darle vida a los botones -->
+    <script>
+        // Función para simular la subida de un archivo nuevo
+        function subirArchivo() {
+            let nombreArchivo = prompt("Ingresa el nombre del nuevo archivo (ej: foto_nueva.jpg):");
+            
+            if (nombreArchivo) {
+                let tbody = document.getElementById('cuerpo-tabla');
+                let nuevaFila = document.createElement('tr');
+                
+                nuevaFila.innerHTML = `
+                    <td><strong>${nombreArchivo}</strong><br><small style="color: #666;">Calculando...</small></td>
+                    <td>Desconocido</td>
+                    <td>#Nuevo</td>
+                    <td style="color: #007bff; font-weight: bold;">Procesando</td>
+                    <td>
+                        <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;" onclick="editarArchivo(this)">Editar</button>
+                        <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; background-color: #dc3545;" onclick="eliminarArchivo(this)">Eliminar</button>
+                    </td>
+                `;
+                // Añade la fila al principio de la tabla
+                tbody.prepend(nuevaFila);
+            }
+        }
+
+        // Función para eliminar la fila correspondiente
+        function eliminarArchivo(boton) {
+            if(confirm("¿Estás seguro de que deseas eliminar este archivo del inventario?")) {
+                let fila = boton.parentNode.parentNode;
+                fila.remove();
+            }
+        }
+
+        // Función para simular la edición de etiquetas
+        function editarArchivo(boton) {
+            let fila = boton.parentNode.parentNode;
+            let celdaEtiquetas = fila.children[2]; // La tercera columna (índice 2)
+            
+            let nuevasEtiquetas = prompt("Edita las etiquetas:", celdaEtiquetas.innerText);
+            if (nuevasEtiquetas !== null) {
+                celdaEtiquetas.innerText = nuevasEtiquetas;
+            }
+        }
+    </script>
 </body>
 </html>

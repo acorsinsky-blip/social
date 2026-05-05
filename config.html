@@ -3,17 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Configuración - SocialBiz</title>
-    <link rel="stylesheet" href="style.css">
+    <!-- Conectado al CSS Único -->
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
     <!-- Navbar común -->
     <nav class="navbar" id="main-nav">
-        <div class="logo">SocialBiz</div>
+        <div class="logo"><strong>SocialBiz</strong></div>
         <ul class="nav-links">
             <li><a href="perfil.html">Perfil</a></li>
             <li><a href="controlstock.html">Inventario</a></li>
             <li><a href="estadisticas.html">Reportes</a></li>
-            <li><a href="config.html" class="active">⚙️</a></li>
+            <li><a href="config.html" class="active">Config</a></li>
+            <li><a href="calendariodeventos.html">Eventos</a></li>
+            <li><a href="formulariodereservas.html">Publicar</a></li>
+            <li><a href="historialdemovimientos.html">Historial</a></li>
+            <li><a href="catalogo.html">Explorar</a></li>
         </ul>
     </nav>
 
@@ -34,9 +39,16 @@
             <!-- Sección Editar Perfil -->
             <section id="cuenta" class="tab-content">
                 <h2>Editar Perfil</h2>
+                
+                <!-- NUEVO: Campo para subir la Foto de Perfil -->
                 <div class="config-field">
-                    <label>Nombre de usuario</label>
-                    <input type="text" id="conf-username" placeholder="Nuevo usuario">
+                    <label>Foto de Perfil</label>
+                    <input type="file" id="conf-avatar" accept="image/*" class="form-control" onchange="previewAvatar(event)">
+                </div>
+
+                <div class="config-field">
+                    <label>Nombre a mostrar</label>
+                    <input type="text" id="conf-username" placeholder="Ej: Alex">
                 </div>
                 <div class="config-field">
                     <label>Biografía</label>
@@ -44,7 +56,7 @@
                 </div>
                 <div class="config-field">
                     <label>Correo Electrónico</label>
-                    <input type="email" id="conf-email">
+                    <input type="email" id="conf-email" placeholder="tu@correo.com">
                 </div>
                 <button class="btn" onclick="saveProfile()">Guardar Cambios</button>
             </section>
@@ -54,13 +66,13 @@
                 <h2>Seguridad</h2>
                 <div class="config-field">
                     <label>Nueva Contraseña</label>
-                    <input type="password" placeholder="Mínimo 8 caracteres">
+                    <input type="password" id="conf-pass1" placeholder="Mínimo 8 caracteres">
                 </div>
                 <div class="config-field">
                     <label>Confirmar Contraseña</label>
-                    <input type="password">
+                    <input type="password" id="conf-pass2">
                 </div>
-                <button class="btn btn-warning">Cambiar Contraseña</button>
+                <button class="btn btn-warning" onclick="changePassword()">Cambiar Contraseña</button>
             </section>
 
             <!-- Sección Notificaciones -->
@@ -76,12 +88,28 @@
                     <input type="checkbox" checked> <label>Mensajes directos de seguidores</label>
                 </div>
             </section>
+            
+            <!-- Sección Privacidad -->
+            <section id="privacidad" class="tab-content" style="display:none;">
+                <h2>Privacidad</h2>
+                <p style="color: #666;">Configura quién puede ver tu actividad.</p>
+                <div class="config-field">
+                    <label>Visibilidad del perfil</label>
+                    <select class="form-control">
+                        <option>Público</option>
+                        <option>Solo amigos</option>
+                        <option>Privado</option>
+                    </select>
+                </div>
+            </section>
         </main>
     </div>
 
-    <script src="auth.js"></script>
     <script>
-        // Función simple para cambiar entre pestañas de configuración
+        // Variable para guardar la imagen temporalmente
+        let tempAvatarBase64 = "";
+
+        // Cambiar entre pestañas
         function showTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
             document.querySelectorAll('.config-sidebar li').forEach(li => li.classList.remove('active'));
@@ -92,19 +120,73 @@
 
         // Cargar datos actuales al iniciar
         document.addEventListener('DOMContentLoaded', () => {
-            const data = JSON.parse(localStorage.getItem('userStored'));
+            const data = JSON.parse(localStorage.getItem('socialBizUser'));
             if(data) {
-                document.getElementById('conf-username').value = data.username;
+                document.getElementById('conf-username').value = data.displayName || data.username || "";
+                document.getElementById('conf-bio').value = data.bio || "";
                 document.getElementById('conf-email').value = data.email || "";
+                tempAvatarBase64 = data.avatar || ""; // Cargamos la foto si ya existe
             }
         });
 
+        // NUEVO: Función para leer la imagen seleccionada
+        function previewAvatar(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    tempAvatarBase64 = e.target.result; // Convierte la imagen a texto
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Guardar cambios de perfil
         function saveProfile() {
             const newName = document.getElementById('conf-username').value;
-            const data = JSON.parse(localStorage.getItem('userStored'));
-            data.username = newName;
-            localStorage.setItem('userStored', JSON.stringify(data));
-            alert("Perfil actualizado correctamente");
+            const newBio = document.getElementById('conf-bio').value; 
+            const newEmail = document.getElementById('conf-email').value;
+            let data = JSON.parse(localStorage.getItem('socialBizUser')) || {};
+            
+            data.displayName = newName;
+            data.bio = newBio; 
+            data.email = newEmail;
+            
+            // Guardamos la foto
+            if (tempAvatarBase64 !== "") {
+                data.avatar = tempAvatarBase64;
+            }
+            
+            localStorage.setItem('socialBizUser', JSON.stringify(data));
+            alert("Perfil actualizado correctamente. ¡Ve a tu perfil para ver los cambios!");
+        }
+
+        // Cambiar contraseña
+        function changePassword() {
+            const pass1 = document.getElementById('conf-pass1').value;
+            const pass2 = document.getElementById('conf-pass2').value;
+            
+            if(pass1 === "" || pass2 === "") {
+                alert("Completa ambos campos.");
+                return;
+            }
+            if(pass1 !== pass2) {
+                alert("Las contraseñas no coinciden.");
+                return;
+            }
+            
+            let data = JSON.parse(localStorage.getItem('socialBizUser')) || {};
+            data.password = pass1;
+            localStorage.setItem('socialBizUser', JSON.stringify(data));
+            alert("Contraseña cambiada con éxito.");
+            document.getElementById('conf-pass1').value = "";
+            document.getElementById('conf-pass2').value = "";
+        }
+
+        // Función para Cerrar Sesión
+        function logout() {
+            localStorage.removeItem('sessionActive');
+            window.location.href = 'perfil.html';
         }
     </script>
 </body>
