@@ -3,24 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>SocialBiz - Estadísticas</title>
-    <style>
-        body { font-family: sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
-        .navbar { background: white; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
-        .nav-links { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
-        .nav-links a { text-decoration: none; color: #333; }
-        .container { max-width: 600px; margin: 40px auto; padding: 20px; }
-        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; }
-        .stat-number { font-size: 2.5em; color: #007bff; font-weight: bold; }
-    </style>
+    <!-- Conectado al CSS Único -->
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
 
-    <nav class="navbar">
+    <!-- Barra de Navegación Unificada con los 8 enlaces -->
+    <nav class="navbar" id="main-nav">
         <div class="logo"><strong>SocialBiz</strong></div>
         <ul class="nav-links">
             <li><a href="perfil.html">Perfil</a></li>
-            <li><a href="#">Inventario</a></li>
-            <li><a href="#" class="active" style="color: #007bff;">Reportes</a></li>
+            <li><a href="controlstock.html">Inventario</a></li>
+            <li><a href="estadisticas.html" class="active">Reportes</a></li>
+            <li><a href="config.html">Config</a></li>
+            <li><a href="calendariodeventos.html">Eventos</a></li>
+            <li><a href="formulariodereservas.html">Publicar</a></li>
+            <li><a href="historialdemovimientos.html">Historial</a></li>
+            <li><a href="catalogo.html">Explorar</a></li>
         </ul>
     </nav>
 
@@ -30,14 +29,15 @@
             
             <div style="margin: 30px 0;">
                 <p>Usuarios activos en tu sesión local:</p>
-                <div class="stat-number">1</div>
+                <!-- Estilos en línea aplicados para reemplazar las clases eliminadas del tag style -->
+                <div style="font-size: 2.5em; color: #007bff; font-weight: bold;">1</div>
             </div>
 
-            <hr>
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
 
             <div style="margin: 30px 0;">
                 <p>Tiempo de pantalla actual:</p>
-                <div id="session-time" class="stat-number">0:00</div>
+                <div id="session-time" style="font-size: 2.5em; color: #007bff; font-weight: bold;">0:00</div>
                 <p style="color: #666;">minutos:segundos</p>
             </div>
         </div>
@@ -45,18 +45,24 @@
 
     <script>
         function updateTimer() {
-            const loginTime = localStorage.getItem('loginTime');
-            if (loginTime) {
-                const now = Date.now();
-                const totalSeconds = Math.floor((now - loginTime) / 1000);
-                
-                const minutes = Math.floor(totalSeconds / 60);
-                const seconds = totalSeconds % 60;
-                
-                // Formato MM:SS
-                const displaySeconds = seconds < 10 ? "0" + seconds : seconds;
-                document.getElementById('session-time').innerText = minutes + ":" + displaySeconds;
+            // Obtenemos el tiempo de inicio de sesión desde la memoria
+            let loginTime = localStorage.getItem('loginTime');
+            
+            // Prevención de errores: Si no existe el registro, lo creamos ahora
+            if (!loginTime) {
+                loginTime = Date.now();
+                localStorage.setItem('loginTime', loginTime);
             }
+
+            const now = Date.now();
+            const totalSeconds = Math.floor((now - loginTime) / 1000);
+            
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            
+            // Formato MM:SS
+            const displaySeconds = seconds < 10 ? "0" + seconds : seconds;
+            document.getElementById('session-time').innerText = minutes + ":" + displaySeconds;
         }
 
         // Actualizar el contador cada segundo
