@@ -2,11 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>SocialBiz - Historial</title>
+    <title>SocialBiz - Mensajes y Actividad</title>
     <link rel="stylesheet" href="index.css">
 </head>
-<body>
-    <nav class="navbar">
+<body style="background: #f4f7f6; margin: 0; font-family: sans-serif;">
+
+    <!-- Barra de Navegación Unificada -->
+    <nav class="navbar" id="main-nav">
         <div class="logo"><strong>SocialBiz</strong></div>
         <ul class="nav-links">
             <li><a href="perfil.html">Perfil</a></li>
@@ -15,42 +17,244 @@
             <li><a href="config.html">Config</a></li>
             <li><a href="calendariodeventos.html">Eventos</a></li>
             <li><a href="formulariodereservas.html">Publicar</a></li>
-            <li><a href="historialdemovimientos.html" class="active">Historial</a></li>
+            <li><a href="historialdemovimientos.html" class="active">Mensajes</a></li>
             <li><a href="catalogo.html">Explorar</a></li>
         </ul>
     </nav>
 
-    <div class="container">
-        <div class="card">
-            <h2>Registro de Actividad</h2>
-            <p style="color: #666;">Historial de notificaciones y movimientos de tu cuenta.</p>
+    <div class="container" style="max-width: 1000px;">
+        
+        <!-- Pestañas Superiores -->
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <button onclick="switchMainTab('tab-chats')" id="btn-chats" class="btn" style="flex: 1; border-radius: 12px; font-size: 1.1rem;">💬 Mensajes Directos</button>
+            <button onclick="switchMainTab('tab-actividad')" id="btn-actividad" class="btn btn-outline" style="flex: 1; border-radius: 12px; font-size: 1.1rem; background: white;">🔔 Actividad de la Cuenta</button>
+        </div>
+
+        <div class="card" style="padding: 0; overflow: hidden; height: 70vh; display: flex;">
             
-            <table>
-                <thead>
-                    <tr>
-                        <th>Fecha y Hora</th>
-                        <th>Tipo de Acción</th>
-                        <th>Detalle</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Hoy, 10:45 AM</td>
-                        <td><strong style="color: #007bff;">Nuevo Login</strong></td>
-                        <td>Inicio de sesión exitoso desde tu dispositivo.</td>
-                    </tr>
-                    <tr>
-                        <td>Ayer, 18:30 PM</td>
-                        <td><strong>Interacción</strong></td>
-                        <td>A Valentina le gustó tu última publicación.</td>
-                    </tr>
-                    <tr>
-                        <td>02 Mayo, 14:15 PM</td>
-                        <td><strong style="color: #28a745;">Publicación</strong></td>
-                        <td>Se añadió un nuevo archivo al Inventario de Stock.</td>
-                    </tr>
-                </tbody>
-            </table>
+            <!-- ==========================================
+                 SECCIÓN 1: CHATS (Estilo Instagram)
+                 ========================================== -->
+            <div id="tab-chats" style="display: flex; width: 100%; height: 100%;">
+                
+                <!-- Lista de Contactos (Izquierda) -->
+                <div style="width: 300px; border-right: 1px solid #eee; background: white; display: flex; flex-direction: column;">
+                    <div style="padding: 20px; border-bottom: 1px solid #eee; font-weight: bold; font-size: 1.2rem;">
+                        Tus Mensajes
+                    </div>
+                    <div id="lista-contactos" style="overflow-y: auto; flex-grow: 1;">
+                        <!-- Se llena con JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Ventana de Chat (Derecha) -->
+                <div style="flex-grow: 1; display: flex; flex-direction: column; background: #f8f9fa;">
+                    
+                    <!-- Cabecera del Chat -->
+                    <div style="padding: 20px; background: white; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 15px;">
+                        <div style="width: 40px; height: 40px; background: #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">👤</div>
+                        <strong id="chat-actual-nombre" style="font-size: 1.1rem;">Selecciona un chat</strong>
+                    </div>
+
+                    <!-- Mensajes (Burbujas) -->
+                    <div id="chat-mensajes" style="flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+                        <div style="text-align: center; color: #999; margin-top: auto; margin-bottom: auto;">
+                            Tus mensajes directos aparecerán aquí.
+                        </div>
+                    </div>
+
+                    <!-- Input para escribir -->
+                    <div style="padding: 20px; background: white; border-top: 1px solid #eee; display: flex; gap: 10px;">
+                        <input type="text" id="chat-input" class="form-control" placeholder="Escribe un mensaje..." onkeypress="manejarEnter(event)" disabled style="border-radius: 25px; padding-left: 20px;">
+                        <button id="btn-enviar" class="btn" onclick="enviarMensaje()" disabled style="border-radius: 25px; padding: 10px 20px;">Enviar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 SECCIÓN 2: ACTIVIDAD E HISTORIAL (Oculto por defecto)
+                 ========================================== -->
+            <div id="tab-actividad" style="display: none; width: 100%; padding: 30px; overflow-y: auto;">
+                <h2 style="margin-top: 0;">Registro de Actividad</h2>
+                <p style="color: #666;">Historial de notificaciones y movimientos de tu cuenta.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha y Hora</th>
+                            <th>Tipo de Acción</th>
+                            <th>Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Hoy, 10:45 AM</td>
+                            <td><strong style="color: #007bff;">Nuevo Login</strong></td>
+                            <td>Inicio de sesión exitoso desde tu dispositivo en Tortuguitas.</td>
+                        </tr>
+                        <tr>
+                            <td>Ayer, 18:30 PM</td>
+                            <td><strong>Interacción</strong></td>
+                            <td>A un usuario le gustó tu última publicación.</td>
+                        </tr>
+                        <tr>
+                            <td>02 Mayo, 14:15 PM</td>
+                            <td><strong style="color: #28a745;">Inventario</strong></td>
+                            <td>Se añadió un nuevo archivo al Gestor de Contenidos.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     </div>
+
+    <script>
+        // --- 1. Lógica para cambiar entre Mensajes y Actividad ---
+        function switchMainTab(tabId) {
+            document.getElementById('tab-chats').style.display = 'none';
+            document.getElementById('tab-actividad').style.display = 'none';
+            
+            document.getElementById('btn-chats').className = 'btn btn-outline';
+            document.getElementById('btn-chats').style.background = 'white';
+            document.getElementById('btn-actividad').className = 'btn btn-outline';
+            document.getElementById('btn-actividad').style.background = 'white';
+
+            document.getElementById(tabId).style.display = tabId === 'tab-chats' ? 'flex' : 'block';
+            
+            const btnActivo = tabId === 'tab-chats' ? 'btn-chats' : 'btn-actividad';
+            document.getElementById(btnActivo).className = 'btn';
+            document.getElementById(btnActivo).style.background = '#007bff';
+        }
+
+        // --- 2. Lógica del Chat ---
+        
+        // Base de datos simulada de chats (Si no hay en el navegador, crea estos de prueba)
+        let misChats = JSON.parse(localStorage.getItem('socialBizChats'));
+        
+        if (!misChats) {
+            misChats = {
+                "Valentina": [
+                    { sender: "Valentina", text: "Hola! ¿Cómo va el código de la red social? 😊" },
+                    { sender: "me", text: "¡Re bien! Ya le estoy agregando la función de chats estilo Instagram 😎" }
+                ],
+                "Antonela": [
+                    { sender: "Antonela", text: "Che, acordate de revisar la interfaz para el proyecto de inclusión." }
+                ],
+                "Grupo Escuela Técnica N°3": [
+                    { sender: "Grupo", text: "Mañana hay que entregar los módulos de Git, no se olviden!" }
+                ]
+            };
+            localStorage.setItem('socialBizChats', JSON.stringify(misChats));
+        }
+
+        let chatActivo = null;
+
+        // Dibuja la lista de contactos en la barra lateral
+        function renderizarContactos() {
+            const lista = document.getElementById('lista-contactos');
+            lista.innerHTML = '';
+
+            Object.keys(misChats).forEach(contacto => {
+                const div = document.createElement('div');
+                div.style.cssText = "padding: 15px 20px; border-bottom: 1px solid #f4f7f6; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.2s;";
+                div.onmouseover = () => div.style.backgroundColor = '#f0f4f8';
+                div.onmouseout = () => div.style.backgroundColor = 'transparent';
+                div.onclick = () => abrirChat(contacto);
+
+                // Muestra el último mensaje cortado para que quede lindo
+                const ultMsj = misChats[contacto][misChats[contacto].length - 1].text;
+                const preview = ultMsj.length > 25 ? ultMsj.substring(0, 25) + "..." : ultMsj;
+
+                div.innerHTML = `
+                    <div style="width: 45px; height: 45px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">👤</div>
+                    <div>
+                        <div style="font-weight: bold; color: #333;">${contacto}</div>
+                        <div style="color: #888; font-size: 0.85rem;">${preview}</div>
+                    </div>
+                `;
+                lista.appendChild(div);
+            });
+        }
+
+        // Abre una conversación
+        function abrirChat(contacto) {
+            chatActivo = contacto;
+            document.getElementById('chat-actual-nombre').innerText = contacto;
+            
+            // Habilitar la barra de escribir
+            document.getElementById('chat-input').disabled = false;
+            document.getElementById('btn-enviar').disabled = false;
+            document.getElementById('chat-input').focus();
+
+            renderizarMensajes();
+        }
+
+        // Dibuja las burbujas de texto
+        function renderizarMensajes() {
+            if (!chatActivo) return;
+            
+            const contenedor = document.getElementById('chat-mensajes');
+            contenedor.innerHTML = '';
+
+            misChats[chatActivo].forEach(msj => {
+                const esMio = msj.sender === "me";
+                
+                const burbuja = document.createElement('div');
+                // Lógica de estilos: Si es mío va a la derecha en azul. Si es del otro, a la izquierda en gris.
+                burbuja.style.cssText = `
+                    max-width: 70%;
+                    padding: 12px 18px;
+                    border-radius: 20px;
+                    margin-bottom: 5px;
+                    line-height: 1.4;
+                    align-self: ${esMio ? 'flex-end' : 'flex-start'};
+                    background-color: ${esMio ? '#007bff' : '#e9ecef'};
+                    color: ${esMio ? 'white' : '#333'};
+                    border-bottom-right-radius: ${esMio ? '4px' : '20px'};
+                    border-bottom-left-radius: ${esMio ? '20px' : '4px'};
+                `;
+                burbuja.innerText = msj.text;
+                contenedor.appendChild(burbuja);
+            });
+
+            // Scrollear siempre al fondo para ver el último mensaje
+            contenedor.scrollTop = contenedor.scrollHeight;
+        }
+
+        // Enviar un mensaje nuevo
+        function enviarMensaje() {
+            if (!chatActivo) return;
+            
+            const input = document.getElementById('chat-input');
+            const texto = input.value.trim();
+            
+            if (texto !== "") {
+                // Agregar al array
+                misChats[chatActivo].push({ sender: "me", text: texto });
+                
+                // Guardar en la memoria
+                localStorage.setItem('socialBizChats', JSON.stringify(misChats));
+                
+                // Limpiar pantalla y recargar
+                input.value = '';
+                renderizarMensajes();
+                renderizarContactos(); // Actualiza el preview lateral
+            }
+        }
+
+        // Enviar con la tecla Enter
+        function manejarEnter(event) {
+            if (event.key === "Enter") {
+                enviarMensaje();
+            }
+        }
+
+        // Inicializar la pantalla
+        window.onload = () => {
+            renderizarContactos();
+            // Inicia con la pestaña de Chats por defecto
+            switchMainTab('tab-chats');
+        };
+    </script>
 </body>
+</html>
